@@ -34,7 +34,11 @@ This library aims to support the following... and only the following:
 ## Boundaries
 
 * **SPI Bus:** this library does not configure or
-  initialize the SPI Bus
+  initialize the SPI Bus itself, though it does configure
+  how the ESP32 will communicate with the ST7735R over that
+  bus (e.g. adding the device to the bus, setting the SPI
+  mode and clock speed for communication with the device,
+  etc)
 * **Display Panel:** this library does not support any
   specific TFT panels
 * **GFX:** this library does not provide features to draw
@@ -127,7 +131,7 @@ includes a list of relevant named values.
 * `st7735r_set_ramwr(...)` write pixels
 * `st7735r_paint(...)` conveniently write pixels in 1 call
 
-# Utility
+### Utility
 
 * `st7735r_dca(...)` builds `dca` arg for `pwctr[3-5]`
   calls
