@@ -214,8 +214,9 @@ Please do not use Github issues to request technical support.
 
 Pull requests that further the goals of this library are welcome.
 
-The [issues list]() is a good place to look for ideas if you would like
-to contribute but don't have a specific contribution in mind.
+The [issues list](https://github.com/mvolk/esp32-st7735r/issues) is a
+good place to look for ideas if you would like to contribute but don't
+have a specific contribution in mind.
 
 If you would like to extend support to additional MCUs or development platforms,
 or to specific TFT panels, please consider forking or building on top of this library.
