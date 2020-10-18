@@ -1033,10 +1033,10 @@ esp_err_t st7735r_raset(
  *
  * @param device the ST7735r device handle
  * @param buffer the pixel data to write
- * @param num_pixes the number of pixels to write
+ * @param num_pixels the number of pixels to write
  * @return ESP_OK or an error code
  */
-esp_err_t st7735r_set_ramwr(
+esp_err_t st7735r_ramwr(
     st7735r_device_handle_t device,
     uint16_t * buffer,
     size_t num_pixels
