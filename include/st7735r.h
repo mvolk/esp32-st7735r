@@ -259,6 +259,11 @@
 #define ST7735R_CFG_VCOM_NEG_2000   0x3F
 
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 /**
  * @brief Initialized and used internally
  *
@@ -1272,5 +1277,9 @@ uint16_t st7735r_rgb565(
     uint8_t blue
 );
 
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // ST7735R_H
