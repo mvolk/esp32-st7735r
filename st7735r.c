@@ -708,7 +708,7 @@ void st7735r_backlight(
 {
     if (device->gpio_bckl == GPIO_NUM_NC)
         return;
-    if (level == 0 || level == 0xFF)
+    if (level == 0 || level == 1)
         gpio_set_level(device->gpio_bckl, level);
 }
 

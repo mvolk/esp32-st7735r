@@ -87,7 +87,7 @@
 #define ST7735R_CFG_18_BIT_COLOR    0x06
 
 #define ST7735R_CFG_BCKL_OFF        0x00
-#define ST7735R_CFG_BCKL_ON         0xFF
+#define ST7735R_CFG_BCKL_ON         0x01
 
 #define ST7735R_CFG_AVDD_450        0x00
 #define ST7735R_CFG_AVDD_460        0x01
