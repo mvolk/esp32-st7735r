@@ -14,7 +14,7 @@ best used for prototyping with specific hardware.
 Which also happens to be what it was designed for. :)
 
 This library is particularly useful for learning
-how to integrate an ST7335R-controlled TFT in your
+how to integrate an ST7735R-controlled TFT in your
 ESP-IDF ESP32 project, and for fine-tuning the
 configuration parameters supplied to the TFT
 controller.
@@ -48,7 +48,6 @@ This library aims to support the following... and only the following:
   reader, on the same SPI bus, but it does not provide
   any support for such additional peripherals
 
-
 ## Installation
 
 Using the modern ESP-IDF with CMake, Git and the recommended project structure (with a
@@ -73,7 +72,11 @@ See [st7735r.h](./include/st7735r.h) for detailed documentation of the following
 ### Initialization
 
 * `st7735r_init(..)` adds the device to the SPI
-bus and initializes the device data structure
+  bus and initializes the device data structure using
+  memory dynamically allocated on the heap
+* `st7735r_init_static(..)` adds the device to the SPI
+  bus and initializes the device data structure using
+  memory allocated by the caller
 
 ### Low-Level Commands
 
@@ -239,17 +242,7 @@ and made this library possible.
 
 ## License & Copyright
 
-This library is released under the MIT License.
-
-Copyright (c) 2020 Michael Volk
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
-documentation files (the "Software"), to deal in the Software without restriction, including without limitation
-the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software,
-and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions
-of the Software.
+See [LICENSE.txt](./LICENSE.txt) for license details.
 
 ## Liability Notice
 
