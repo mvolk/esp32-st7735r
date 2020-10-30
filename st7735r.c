@@ -185,15 +185,32 @@ void st7735r_spi_pre_transfer_callback_isr(spi_transaction_t *t)
 }
 
 
-void st7735r_init(
-    st7735r_device_handle_t device,
-    st7735r_spi_params_t *spi_params)
+st7735r_device_handle_t st7735r_init(
+    const st7735r_params_t *params)
 {
-    if (device->host != HSPI_HOST && device->host != VSPI_HOST) {
+    st7735r_device_handle_t device;
+    device = (st7735r_device_handle_t) malloc(sizeof(st7735r_device_t));
+    if (!device) {
+        ESP_LOGE(
+            ST7735R_TAG,
+            "ST7735R failed to allocate memory for device descriptor"
+        );
+        esp_restart();
+    }
+    st7735r_init_static(params, device);
+    return device;
+}
+
+
+void st7735r_init_static(
+    const st7735r_params_t *params,
+    st7735r_device_handle_t device)
+{
+    if (params->host != HSPI_HOST && params->host != VSPI_HOST) {
         ESP_LOGE(ST7735R_TAG, "ST7735R requires either HSPI or VSPI host");
         esp_restart();
     }
-    if (device->gpio_dc == GPIO_NUM_NC) {
+    if (params->gpio_dc == GPIO_NUM_NC) {
         ESP_LOGE(ST7735R_TAG, "ST7735R requires a connected D/C pin");
         esp_restart();
     }
@@ -201,29 +218,31 @@ void st7735r_init(
     spi_device_interface_config_t dev_cfg = {
         .mode = 0,
         .clock_speed_hz = SPI_MASTER_FREQ_10M,
-        .spics_io_num = device->gpio_cs,
+        .spics_io_num = params->gpio_cs,
         .queue_size = 6,
         .pre_cb = st7735r_spi_pre_transfer_callback_isr,
     };
     esp_err_t ret = spi_bus_add_device(
-        device->host,
+        params->host,
         &dev_cfg,
         &(device->spi_device)
     );
     ESP_ERROR_CHECK(ret);
 
     // Initialize non-SPI GPIOs
-    gpio_set_direction(device->gpio_dc, GPIO_MODE_OUTPUT);
-    device->dc_cmd.gpio_dc = device->gpio_dc;
+    gpio_set_direction(params->gpio_dc, GPIO_MODE_OUTPUT);
+    device->dc_cmd.gpio_dc = params->gpio_dc;
     device->dc_cmd.setting = 0;
-    device->dc_data.gpio_dc = device->gpio_dc;
+    device->dc_data.gpio_dc = params->gpio_dc;
     device->dc_data.setting = 1;
 
-    if (device->gpio_rst != GPIO_NUM_NC)
-        gpio_set_direction(device->gpio_rst, GPIO_MODE_OUTPUT);
+    if (params->gpio_rst != GPIO_NUM_NC)
+        gpio_set_direction(params->gpio_rst, GPIO_MODE_OUTPUT);
+    device->gpio_rst = params->gpio_rst;
 
-    if (device->gpio_bckl != GPIO_NUM_NC)
-        gpio_set_direction(device->gpio_bckl, GPIO_MODE_OUTPUT);
+    if (params->gpio_bckl != GPIO_NUM_NC)
+        gpio_set_direction(params->gpio_bckl, GPIO_MODE_OUTPUT);
+    device->gpio_bckl = params->gpio_bckl;
 }
 
 

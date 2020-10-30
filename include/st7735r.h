@@ -286,12 +286,6 @@ typedef struct {
 typedef struct {
     /** @brief SPI device handle */
     spi_device_handle_t spi_device;
-    /** @brief SPI Host (HSPI or VSPI) */
-    spi_host_device_t host;
-    /** @brief SPI Chip Select GPIO pin */
-    gpio_num_t gpio_cs;
-    /** @brief Data/Command Select GPIO pin */
-    gpio_num_t gpio_dc;
     /** @brief Internal use only */
     st7735r_dc_setting_t dc_cmd;
     /** @brief Internal use only */
@@ -302,11 +296,22 @@ typedef struct {
     gpio_num_t gpio_bckl;
 } st7735r_device_t;
 
+
 /**
- * @brief Placeholder for future enhancement
+ * @brief Configuration for initalization
  */
 typedef struct {
-} st7735r_spi_params_t;
+    /** @brief SPI Host (HSPI or VSPI) */
+    spi_host_device_t host;
+    /** @brief SPI Chip Select GPIO pin */
+    gpio_num_t gpio_cs;
+    /** @brief Data/Command Select GPIO pin */
+    gpio_num_t gpio_dc;
+    /** @brief Optional Reset GPIO pin */
+    gpio_num_t gpio_rst;
+    /** @brief Optional Backlight GPIO pin */
+    gpio_num_t gpio_bckl;
+} st7735r_params_t;
 
 
 /**
@@ -520,29 +525,46 @@ esp_err_t st7735r_send_data(
  *
  * Adds the device to the SPI bus and
  * completes initialization of the device
- * descriptor.
+ * descriptor using memory allocated on the
+ * heap by this method.
+ *
+ * For further documentation, see
+ * st7735r_init_static(...).
+ *
+ * @param params configuration parameters
+ */
+st7735r_device_handle_t st7735r_init(
+    const st7735r_params_t *params
+);
+
+
+/**
+ * @brief Add the device to the SPI bus
+ *
+ * Adds the device to the SPI bus and
+ * completes initialization of the device
+ * descriptor using memory allocated by the
+ * caller.
  *
  * This method will add the device to the SPI
  * bus with a 6-transaction queue, SPI mode 0,
  * and a 10MHz clock speed. Future enhancements
- * may make this hard-coded parameters customizable.
+ * may make these hard-coded parameters
+ * customizable.
  *
- * NOTE 1: The SPI Host must be set in the
- * device descriptor before invoking this
- * method. HSPI or VSPI are supported.
+ * NOTE 1: HSPI or VSPI are supported SPI hosts.
  * SPI1 is not recommended.
  *
  * Note 2: GPIO pins must be set in the
- * device descriptor before invoking this
- * method. The rst and bckl pins are
- * optional and their absence is gracefully
- * handled in all of this library's
+ * params before invoking this method. The rst
+ * and bckl pins are optional and their absence
+ * is gracefully handled in all of this library's
  * functions.
  *
  * Note 3: The SPI bus itself must already
  * be initialized before calling this
- * method. This library does not configure
- * the bus itself. This library was tested
+ * method. This library does not configure or
+ * initialize the SPI bus. This library was tested
  * using the following bus config:
  *
  * SPI host: HSPI
@@ -554,13 +576,13 @@ esp_err_t st7735r_send_data(
  * max_transfer_sz: 4096 bytes
  * DMA Channel: 2
  *
- * @param device the ST7735r device handle, preconfigured
- *        per notes above.
- * @param spi_param placeholder for future enhancement, NULL ok
+ * @param params configuration parameters
+ * @param device pointer to the allocated memory
+ *        to populate with the st7735r_device_t.
  */
-void st7735r_init(
-    st7735r_device_handle_t device,
-    st7735r_spi_params_t *spi_params
+void st7735r_init_static(
+    const st7735r_params_t *params,
+    st7735r_device_handle_t device
 );
 
 
