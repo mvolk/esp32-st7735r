@@ -10,8 +10,8 @@
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice this permission notice, and the disclaimer below
+ * shall be included in all copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -1235,68 +1235,6 @@ esp_err_t st7735r_paint(
     uint8_t x_max,
     uint8_t y_min,
     uint8_t y_max
-);
-
-
-/**
- * @brief Builds RGB/565 color values
- *
- * This method create 2-byte (16-bit) color codes that
- * correct for the little endianness of the ESP's
- * memory layout.
- *
- * Since a buffer of pixel colors is handled upon SPI
- * transmission as an array of bytes (and not an array of
- * 2-byte integers), and because the ESP32 stores bytes
- * in memory in little endian order, the bytes of each
- * 16-bit color code are inverted when sent over the wire.
- *
- * The ESP32 knows that when reading a 2-byte integer
- * it needs to treat the first byte as least-signficant,
- * but the ESP32 does not know when reading an array of
- * bytes given by uint8_t* (or void *) that it needs to do
- * anything special with the byte order of any particular
- * grouping of bytes.
- *
- * This method corrects for that inversion by pre-inverting
- * the bytes so that when inverted in stored, they are
- * actually laid out in memory in the expect bit order,
- * and when read bit-by-bit or byte-by-byte, such as when
- * transmitting via SPI, they come out of memory in the
- * expected RGB/565 sequence.
- *
- * For example, B[4:0]G[5:0]R[4:0] is the expected sequence
- * of bits in an RGB/565 value. If the equivalent integer
- * value is assigned to an ESP32's uint16_t, the bitwise
- * layout in the ESP32's RAM (or ROM) will actually be
- * G[2:0]R[4:0]B[4:0]G[5:3], where G[2:0]R[4:0] is the least
- * signficant byte and B[4:0]G[5:3] is the most significant
- * byte. Further, G[2:0]R[4:0]B[4:0]G[5:3] is the order
- * in which the bytes will be transmitted to the ST7735R,
- * and the ST7735R treats this as a big-endian value
- * with no need for byte order inversion.
- *
- * NOTE: Values of 0x00 to 0xFF are legal for all three
- * color values, but the algorithm in use here will
- * truncate enough of the least significant bits of
- * each color code to fit the value into the available
- * bit space (5 bits for red and blue, 6 bits for
- * green). Thus values of 0x07 or less for red or blue
- * and 0x03 or less for green are equivalent to 0x00.
- *
- * @param red red pixel brightness
- * @param green green pixel brightness
- * @param blue blue pixel brightness
- * @return 16-bit RGB/565 color with the byte order
- *         inverted such that the value's bits are
- *         correcly order in ESP32 memory to be read
- *         out bit by bit or byte by byte (but not
- *         uint16_t by uint16_t!)
- */
-uint16_t st7735r_rgb565(
-    uint8_t red,
-    uint8_t green,
-    uint8_t blue
 );
 
 

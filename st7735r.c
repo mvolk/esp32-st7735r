@@ -10,8 +10,8 @@
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice this permission notice, and the disclaimer below
+ * shall be included in all copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -794,17 +794,4 @@ esp_err_t st7735r_paint(
         );
     }
     return ret;
-}
-
-
-uint16_t st7735r_rgb565(
-    uint8_t red,
-    uint8_t green,
-    uint8_t blue)
-{
-  return
-    ((green & 0x00FC) << 10) |
-    (red & 0x00F8) |
-    ((blue & 0x00F8) << 5) |
-    (green >> 5);
 }
